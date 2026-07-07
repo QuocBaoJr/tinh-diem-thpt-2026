@@ -3,69 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tính điểm xét tốt nghiệp THPT 2026</title>
+<title>Công cụ tính điểm tốt nghiệp THPT 2026</title>
 
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background:#f2f2f2;
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
-
+body{
+    background:#f4f6f9;
+    padding:30px;
+}
 .container{
-    max-width:700px;
-    margin:40px auto;
+    max-width:900px;
+    margin:auto;
     background:#fff;
     padding:25px;
     border-radius:12px;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
+    box-shadow:0 0 15px rgba(0,0,0,.1);
 }
-
-h2{
-    text-align:center;
+h1{
     color:#0066cc;
+    text-align:center;
+    margin-bottom:25px;
 }
-
-label{
-    display:block;
-    margin-top:15px;
-    font-weight:bold;
+.step{
+    margin-bottom:25px;
 }
-
+.step h2{
+    color:#333;
+    margin-bottom:10px;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;
+}
 input{
     width:100%;
     padding:10px;
-    margin-top:5px;
     border:1px solid #ccc;
-    border-radius:6px;
-    font-size:16px;
+    border-radius:8px;
+    font-size:15px;
 }
-
 button{
     width:100%;
-    padding:12px;
-    margin-top:25px;
-    background:#007BFF;
-    color:white;
+    padding:14px;
+    background:#007bff;
+    color:#fff;
     border:none;
     border-radius:8px;
     font-size:18px;
     cursor:pointer;
 }
-
 button:hover{
     background:#0056b3;
 }
-
 .result{
     margin-top:25px;
-    background:#eaf8ea;
-    padding:15px;
-    border-radius:8px;
+    background:#eef8ff;
+    padding:20px;
+    border-radius:10px;
     font-size:20px;
     text-align:center;
-    font-weight:bold;
-    color:#008000;
+}
+small{
+    color:#777;
 }
 </style>
 </head>
@@ -74,64 +79,122 @@ button:hover{
 
 <div class="container">
 
-<h2>TÍNH ĐIỂM XÉT TỐT NGHIỆP THPT 2026</h2>
+<h1>CÔNG CỤ TÍNH ĐIỂM XÉT TỐT NGHIỆP THPT 2026</h1>
 
-<label>Tổng điểm các môn dự thi</label>
-<input type="number" id="tongDiem" step="0.01">
+<div class="step">
+<h2>Bước 1: Nhập điểm thi tốt nghiệp THPT 2026</h2>
 
-<label>Số môn dự thi</label>
-<input type="number" id="soMon">
+<div class="grid">
+<input type="number" id="mon1" placeholder="Môn 1" min="0" max="10" step="0.01">
+<input type="number" id="mon2" placeholder="Môn 2" min="0" max="10" step="0.01">
+<input type="number" id="mon3" placeholder="Môn 3" min="0" max="10" step="0.01">
+<input type="number" id="mon4" placeholder="Môn 4" min="0" max="10" step="0.01">
+</div>
 
-<label>Tổng điểm khuyến khích (nếu có)</label>
-<input type="number" id="kk" step="0.01" value="0">
+<small>Có thể nhập 3 hoặc 4 môn.</small>
 
-<label>Điểm trung bình lớp 10</label>
-<input type="number" id="dtb10" step="0.01">
+</div>
 
-<label>Điểm trung bình lớp 11</label>
-<input type="number" id="dtb11" step="0.01">
+<div class="step">
 
-<label>Điểm trung bình lớp 12</label>
-<input type="number" id="dtb12" step="0.01">
+<h2>Bước 2: Nhập điểm các môn học đánh giá bằng điểm số</h2>
 
-<label>Điểm ưu tiên (nếu có)</label>
-<input type="number" id="ut" step="0.01" value="0">
+<div class="grid">
 
-<button onclick="tinh()">TÍNH ĐIỂM</button>
+<input type="number" id="dtb10" placeholder="ĐTB lớp 10">
+
+<input type="number" id="dtb11" placeholder="ĐTB lớp 11">
+
+<input type="number" id="dtb12" placeholder="ĐTB lớp 12">
+
+</div>
+
+</div>
+
+<div class="step">
+
+<h2>Bước 3: Nhập điểm ưu tiên, khuyến khích</h2>
+
+<div class="grid">
+
+<input type="number" id="uutien" placeholder="Điểm ưu tiên">
+
+<input type="number" id="khuyenkhich" placeholder="Điểm khuyến khích">
+
+</div>
+
+</div>
+
+<div class="step">
+
+<button onclick="tinh()">BƯỚC 4: XEM KẾT QUẢ</button>
+
+</div>
 
 <div class="result" id="ketqua">
-Điểm xét tốt nghiệp: --
+
+Điểm xét tốt nghiệp sẽ hiển thị tại đây.
+
 </div>
 
 </div>
 
 <script>
 
+function value(id){
+return parseFloat(document.getElementById(id).value)||0;
+}
+
 function tinh(){
 
-let tongDiem = parseFloat(document.getElementById("tongDiem").value) || 0;
-let soMon = parseFloat(document.getElementById("soMon").value) || 1;
-let kk = parseFloat(document.getElementById("kk").value) || 0;
+let diemThi=[];
 
-let dtb10 = parseFloat(document.getElementById("dtb10").value) || 0;
-let dtb11 = parseFloat(document.getElementById("dtb11").value) || 0;
-let dtb12 = parseFloat(document.getElementById("dtb12").value) || 0;
+["mon1","mon2","mon3","mon4"].forEach(id=>{
+let v=value(id);
+if(v>0) diemThi.push(v);
+});
 
-let ut = parseFloat(document.getElementById("ut").value) || 0;
+if(diemThi.length<3){
+alert("Vui lòng nhập ít nhất 3 môn thi.");
+return;
+}
 
-// ĐTB các năm học
-let dtbNamHoc = (dtb10*1 + dtb11*2 + dtb12*3)/6;
+let tong=diemThi.reduce((a,b)=>a+b,0);
 
-// Điểm trung bình bài thi + KK
-let diemThi = ((tongDiem/soMon) + (kk/4))/2;
+let tbThi=tong/diemThi.length;
 
-// Điểm xét tốt nghiệp
-let dxtn = diemThi + dtbNamHoc + ut;
+let kk=value("khuyenkhich");
 
-document.getElementById("ketqua").innerHTML =
-`
-ĐTB các năm học: <b>${dtbNamHoc.toFixed(2)}</b><br><br>
-Điểm xét tốt nghiệp: <span style="font-size:28px">${dxtn.toFixed(2)}</span>
+let uuTien=value("uutien");
+
+let dtb10=value("dtb10");
+
+let dtb11=value("dtb11");
+
+let dtb12=value("dtb12");
+
+let dtbNam=((dtb10*1)+(dtb11*2)+(dtb12*3))/6;
+
+let diem=((tbThi+(kk/4))+dtbNam)/2+uuTien;
+
+diem=diem.toFixed(2);
+
+document.getElementById("ketqua").innerHTML=`
+
+<h2>🎓 KẾT QUẢ</h2>
+
+<p><b>Điểm TB bài thi:</b> ${tbThi.toFixed(2)}</p>
+
+<p><b>Điểm TB các năm học:</b> ${dtbNam.toFixed(2)}</p>
+
+<p><b>Điểm ưu tiên:</b> ${uuTien}</p>
+
+<p><b>Điểm khuyến khích:</b> ${kk}</p>
+
+<hr>
+
+<h1 style="color:red">${diem}</h1>
+
 `;
 
 }
